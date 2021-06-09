@@ -3,11 +3,11 @@ set -e
 set -x
 
 main() {
-  # mark_version
+  mark_version
   # copy_src_files
   # configure_git
-  install_apt_packages
-  # install_docker_compose
+  # install_apt_packages
+  install_docker_compose
   # install_rbenv
   # install_pyenv
   # install_nvm
@@ -68,7 +68,7 @@ clean_apt() {
 }
 
 install_docker_compose() {
-  sudo curl -L https://github.com/docker/compose/releases/download/1.27.4/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+  sudo curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
   sudo chmod +x /usr/local/bin/docker-compose
 }
 
