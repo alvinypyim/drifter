@@ -11,4 +11,4 @@ blocks:
         - name: Main
           commands:
             - checkout
-            - pwd
+            - ./main
