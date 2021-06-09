@@ -5,6 +5,7 @@ set -x
 main() {
   install_virtualbox
   install_vmware_vdiskmanager
+  install_vagrant
 }
 
 install_virtualbox() {
@@ -27,6 +28,16 @@ install_vmware_vdiskmanager() {
   popd
   rm -vRf "$archive_file_path" "$archive_path"
   sudo apt-get -y install zlib1g:i386 libc6-i386 libssl0.9.8:i386
+}
+
+install_vagrant() {
+  local vagrant_deb
+
+  vagrant_deb="$(mktemp)"
+  curl -L "-o$vagrant_deb" https://releases.hashicorp.com/vagrant/2.2.16/vagrant_2.2.16_x86_64.deb
+  sudo dpkg -i "$vagrant_deb"
+  rm -v "$vagrant_deb"
+  sudo apt-get -y -f install
 }
 
 main
