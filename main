@@ -3,6 +3,8 @@ set -e
 set -x
 
 main() {
+  type gcc
+  exec gcc --version
   install_virtualbox
   # install_vmware_vdiskmanager
   # install_vagrant
