@@ -6,7 +6,8 @@ main() {
   install_virtualbox
   install_vmware_vdiskmanager
   install_vagrant
-  build_box
+  install_packer
+  # build_box
 }
 
 install_virtualbox() {
@@ -39,6 +40,13 @@ install_vagrant() {
   sudo dpkg -i "$vagrant_deb"
   rm -v "$vagrant_deb"
   sudo apt-get -y -f install
+}
+
+install_packer() {
+  curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+  sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+  sudo apt-get update
+i sudo apt-get -y install packer
 }
 
 build_box() {
