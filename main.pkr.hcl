@@ -30,6 +30,18 @@ build {
     destination = "/home/vagrant/install/"
     source = "src/install/"
   }
+  provisioner "file" {
+    destination = "/home/vagrant/.gitignore"
+    source = "src/gitignore"
+  }
+  provisioner "file" {
+    destination = "/home/vagrant/.gitignore"
+    source = "src/gitignore"
+  }
+  provisioner "file" {
+    destination = "/tmp/smb-section.conf"
+    source = "src/smb-section.conf"
+  }
   provisioner "shell" {
     script = "src/prepare"
     environment_vars = ["BOX_VERSION=${var.box_version}"]

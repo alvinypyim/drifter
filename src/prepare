@@ -4,11 +4,10 @@ set -x
 
 main() {
   mark_version
-  # copy_src_files
-  # configure_git
+  configure_git
   # install_apt_packages
-  install_docker_compose
-  # install_rbenv
+  # install_docker_compose
+  install_rbenv
   # install_pyenv
   # install_nvm
   # install_yarn
@@ -18,7 +17,7 @@ main() {
   # install_pip_packages
   # install_aws_cli
   # install_saw
-  # install_samba
+  install_samba
   # install_gui_packages
   # install_chrome
   # configure_vim
@@ -31,19 +30,9 @@ mark_version() {
   [ -z "$BOX_VERSION" ] || echo "$BOX_VERSION" > ~/box-version
 }
 
-copy_src_files() {
-  pushd /vagrant/src
-  cp -v vimrc ~/.vimrc
-  cp -v inputrc ~/.inputrc
-  cp -v screenrc ~/.screenrc
-  cp -vR install ~
-  popd
-}
-
 configure_git() {
   git config --global core.editor "$(which vim)"
   git config --global merge.conflictstyle diff3
-  cp -v /vagrant/src/gitignore ~/.gitignore
   git config --global core.excludesfile ~/.gitignore
   git config --global core.pager 'less -S'
 }
@@ -104,9 +93,9 @@ source_profile() {
 }
 
 install_global_ruby() {
-  rbenv install 2.6.3
+  rbenv install 2.7.3
   rbenv rehash
-  rbenv global 2.6.3
+  rbenv global 2.7.3
 }
 
 install_pyenv() {
@@ -161,7 +150,8 @@ install_saw() {
 
 install_samba() {
   sudo apt-get -y install samba
-  sudo bash -c 'cat /vagrant/src/smb-section.conf >> /etc/samba/smb.conf'
+  sudo bash -c 'cat /tmp/smb-section.conf >> /etc/samba/smb.conf'
+  rm -v /tmp/smb-section.conf
   { echo vagrant && echo vagrant; } | sudo smbpasswd -a -s vagrant
 }
 
