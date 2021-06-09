@@ -7,4 +7,7 @@ source "vagrant" "example" {
 
 build {
   sources = ["source.vagrant.example"]
+  provisioner "shell" {
+    inline = ["echo foo > ggg"]
+  }
 }
