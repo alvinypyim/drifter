@@ -3,7 +3,7 @@ set -e
 set -x
 
 main() {
-  echo "$a"
+  type aws
   exit
   install_virtualbox
   install_vmware_vdiskmanager
