@@ -6,6 +6,7 @@ main() {
   install_virtualbox
   install_vmware_vdiskmanager
   install_vagrant
+  build_box
 }
 
 install_virtualbox() {
@@ -38,6 +39,14 @@ install_vagrant() {
   sudo dpkg -i "$vagrant_deb"
   rm -v "$vagrant_deb"
   sudo apt-get -y -f install
+}
+
+build_box() {
+  mkdir -v vagrant
+  pushd vagrant
+  vagrant init hashicorp/bionic64
+  vagrant up
+  popd
 }
 
 main
