@@ -12,13 +12,20 @@ source "vagrant" "example" {
 build {
   sources = ["source.vagrant.example"]
   provisioner "file" {
-    destination = "/home/vagrant"
-    sources = [
-      "src/.vimrc",
-      "src/.inputrc",
-      "src/.screenrc",
-      "install"
-    ]
+    destination = "/home/vagrant/.vimrc"
+    source = "src/vimrc"
+  }
+  provisioner "file" {
+    destination = "/home/vagrant/.inputrc"
+    source = "src/inputrc"
+  }
+  provisioner "file" {
+    destination = "/home/vagrant/.screenrc"
+    source = "src/screenrc"
+  }
+  provisioner "file" {
+    destination = "/home/vagrant/"
+    source = "src/install/"
   }
   provisioner "shell" {
     script = "src/prepare"
