@@ -3,7 +3,7 @@ set -e
 set -x
 
 main() {
-  type gcc
+  sudo apt-get -y install build-essential
   exec gcc --version
   install_virtualbox
   # install_vmware_vdiskmanager
