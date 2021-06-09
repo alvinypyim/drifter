@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+set -x
+sudo bash -c 'echo deb http://download.virtualbox.org/virtualbox/debian trusty contrib >> /etc/apt/sources.list'
+curl https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo apt-key add -
+curl https://www.virtualbox.org/download/oracle_vbox.asc | sudo apt-key add -
+sudo apt-get update
+sudo apt-get -y install virtualbox-6.1
