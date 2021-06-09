@@ -4,9 +4,9 @@ set -x
 
 main() {
   install_virtualbox
-  # install_vmware_vdiskmanager
-  # install_vagrant
-  # build_box
+  install_vmware_vdiskmanager
+  install_vagrant
+  build_box
 }
 
 install_virtualbox() {
@@ -15,7 +15,6 @@ install_virtualbox() {
   curl https://www.virtualbox.org/download/oracle_vbox.asc | sudo apt-key add -
   sudo apt-get update
   sudo apt-get -y install virtualbox-6.1
-  cat /var/log/vbox-setup.log
 }
 
 install_vmware_vdiskmanager() {
