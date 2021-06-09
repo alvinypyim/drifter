@@ -3,7 +3,6 @@ set -e
 set -x
 
 main() {
-  sem-version c 8
   install_virtualbox
   # install_vmware_vdiskmanager
   # install_vagrant
