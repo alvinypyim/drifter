@@ -15,7 +15,7 @@ install_virtualbox() {
   curl https://www.virtualbox.org/download/oracle_vbox.asc | sudo apt-key add -
   sudo apt-get update
   sudo apt-get -y install virtualbox-6.1
-  cat vagrant init hashicorp/bionic64
+  cat /var/log/vbox-setup.log
 }
 
 install_vmware_vdiskmanager() {
