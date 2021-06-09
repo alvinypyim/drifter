@@ -1,8 +1,32 @@
 #!/usr/bin/env bash
 set -e
 set -x
-sudo bash -c 'echo deb http://download.virtualbox.org/virtualbox/debian bionic contrib >> /etc/apt/sources.list'
-curl https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo apt-key add -
-curl https://www.virtualbox.org/download/oracle_vbox.asc | sudo apt-key add -
-sudo apt-get update
-sudo apt-get -y install virtualbox-6.1
+
+main() {
+  install_virtualbox
+  install_vmware_vdiskmanager
+}
+
+install_virtualbox() {
+  sudo bash -c 'echo deb http://download.virtualbox.org/virtualbox/debian bionic contrib >> /etc/apt/sources.list'
+  curl https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo apt-key add -
+  curl https://www.virtualbox.org/download/oracle_vbox.asc | sudo apt-key add -
+  sudo apt-get update
+  sudo apt-get -y install virtualbox-6.1
+}
+
+install_vmware_vdiskmanager() {
+  local archive_path archive_file_path file_name=1023856-vmware-vdiskmanager-linux.7.0.1
+  archive_file_path="$(mktemp)"
+  curl -L "-o$archive_file_path" https://kb.vmware.com/sfc/servlet.shepherd/version/download/068f4000009EgK0AAK
+  archive_path="$(mktemp -d)"
+  pushd "$archive_path"
+  unzip "$archive_file_path"
+  chmod -v 775 "$file_name"
+  sudo mv -v "$file_name" /usr/bin/vmware-vdiskmanager
+  popd
+  rm -vRf "$archive_file_path" "$archive_path"
+  sudo apt-get -y install zlib1g:i386 libc6-i386 libssl0.9.8:i386
+}
+
+main
