@@ -7,7 +7,7 @@ main() {
   install_vmware_vdiskmanager
   install_vagrant
   install_packer
-  # build_box
+  build_box
 }
 
 install_virtualbox() {
@@ -50,12 +50,7 @@ install_packer() {
 }
 
 build_box() {
-  vagrant init hashicorp/bionic64
-  packer build docker-ubuntu.pkr.hcl
-  mkdir -v vagrant
-  pushd vagrant
-  vagrant up
-  popd
+  packer build main.pkr.hcl
 }
 
 main
