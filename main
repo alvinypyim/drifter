@@ -10,6 +10,7 @@ main() {
   install_vagrant
   install_packer
   build_box
+  upload_box
 }
 
 install_virtualbox() {
@@ -53,6 +54,11 @@ install_packer() {
 
 build_box() {
   packer build main.pkr.hcl
+  ls
+}
+
+upload_box() {
+  aws s3 ls s3://s3-archive-bucket-12lood0bp4x5v/ggg || echo -n
 }
 
 main
