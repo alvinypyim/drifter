@@ -3,6 +3,8 @@ set -e
 set -x
 
 main() {
+  dpkg --list | grep gcc
+  exit
   sudo apt-get update
   sudo apt-get -u upgrade --assume-no
   sudo apt-get -y install build-essential
