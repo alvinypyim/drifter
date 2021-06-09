@@ -1,0 +1,7 @@
+se nu sc lbr ts=2 sw=2 hls nowrap et vb t_vb= bg=light
+let g:netrw_browse_split = 4
+let g:netrw_list_hide = '^\.[^\.]'
+let g:netrw_cursor = 0
+let g:netrw_banner = 0
+let g:netrw_bufsettings = 'noma nomod nobl nowrap ro nornu'
+au FileType netrw se wfw

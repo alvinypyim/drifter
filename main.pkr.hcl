@@ -11,6 +11,15 @@ source "vagrant" "example" {
 
 build {
   sources = ["source.vagrant.example"]
+  provisioner "file" {
+    destination = "/home/vagrant"
+    sources = [
+      "src/.vimrc",
+      "src/.inputrc",
+      "src/.screenrc",
+      "install"
+    ]
+  }
   provisioner "shell" {
     script = "src/prepare"
     environment_vars = ["BOX_VERSION=${var.box_version}"]

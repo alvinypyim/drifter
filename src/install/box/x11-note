@@ -1,0 +1,3 @@
+Xvfb :1 -screen 0 1920x1013x24 &> /dev/null &
+DISPLAY=:1 fluxbox &> /dev/null &
+x11vnc -display :1 -nopw -listen 0.0.0.0 -xkb -forever -repeat &> /dev/null &

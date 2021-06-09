@@ -1,0 +1,4 @@
+defshell -bash
+defscrollback 99999
+startup_message off
+defutf8 on

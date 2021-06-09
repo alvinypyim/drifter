@@ -1,0 +1,10 @@
+deb $UBUNTU_APT_MIRROR bionic main restricted
+deb $UBUNTU_APT_MIRROR bionic-updates main restricted
+deb $UBUNTU_APT_MIRROR bionic universe
+deb $UBUNTU_APT_MIRROR bionic-updates universe
+deb $UBUNTU_APT_MIRROR bionic multiverse
+deb $UBUNTU_APT_MIRROR bionic-updates multiverse
+deb $UBUNTU_APT_MIRROR bionic-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu bionic-security main restricted
+deb http://security.ubuntu.com/ubuntu bionic-security universe
+deb http://security.ubuntu.com/ubuntu bionic-security multiverse
