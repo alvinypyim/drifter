@@ -23,8 +23,11 @@ build {
     destination = "/home/vagrant/.screenrc"
     source = "src/screenrc"
   }
+  provisioner "shell" {
+    inline = ["mkdir install"]
+  }
   provisioner "file" {
-    destination = "/home/vagrant/install"
+    destination = "/home/vagrant/install/"
     source = "src/install/"
   }
   provisioner "shell" {
