@@ -4,7 +4,7 @@ set -x
 
 main() {
   sudo apt-get update
-  sudo apt-get outdated
+  sudo apt-get -u upgrade --assume-no
   sudo apt-get -y install build-essential
   exec gcc --version
   install_virtualbox
