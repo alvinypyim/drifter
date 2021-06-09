@@ -52,11 +52,10 @@ install_packer() {
 
 build_box() {
   packer build main.pkr.hcl
-  ls output-example
 }
 
 upload_box() {
-  aws s3 cp output-example s3://s3-archive-bucket-12lood0bp4x5v/
+  aws s3 cp output-example/package.box s3://s3-archive-bucket-12lood0bp4x5v/
 }
 
 main
