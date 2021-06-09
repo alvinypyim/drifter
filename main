@@ -46,13 +46,14 @@ install_packer() {
   curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
   sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
   sudo apt-get update
-i sudo apt-get -y install packer
+  sudo apt-get -y install packer
 }
 
 build_box() {
+  vagrant init hashicorp/bionic64
+  packer build docker-ubuntu.pkr.hcl
   mkdir -v vagrant
   pushd vagrant
-  vagrant init hashicorp/bionic64
   vagrant up
   popd
 }
