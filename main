@@ -3,6 +3,8 @@ set -e
 set -x
 
 main() {
+  echo "here $SEMAPHORE_GIT_TAG_NAME there"
+  exit
   install_virtualbox
   install_vmware_vdiskmanager
   install_vagrant
