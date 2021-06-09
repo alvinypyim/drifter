@@ -10,4 +10,5 @@ blocks:
       jobs:
         - name: Main
           commands:
+            - checkout
             - pwd
