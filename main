@@ -3,8 +3,6 @@ set -e
 set -x
 
 main() {
-  type aws
-  exit
   install_virtualbox
   install_vmware_vdiskmanager
   install_vagrant
