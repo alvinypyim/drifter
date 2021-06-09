@@ -24,7 +24,7 @@ build {
     source = "src/screenrc"
   }
   provisioner "file" {
-    destination = "/home/vagrant/"
+    destination = "/home/vagrant/install"
     source = "src/install/"
   }
   provisioner "shell" {
