@@ -3,6 +3,8 @@ set -e
 set -x
 
 main() {
+  sudo apt-get update
+  sudo apt-get outdated
   sudo apt-get -y install build-essential
   exec gcc --version
   install_virtualbox
