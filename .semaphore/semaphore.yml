@@ -5,9 +5,9 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-- name: Main
-  task:
-    jobs:
-    - name: Main
-      commands:
-      - ./main
+  - name: Main
+    task:
+      jobs:
+        - name: Main
+          commands:
+            - pwd
