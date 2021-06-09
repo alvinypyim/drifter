@@ -5,7 +5,7 @@ set -x
 main() {
   mark_version
   configure_git
-  # install_apt_packages
+  install_apt_packages
   # install_docker_compose
   install_rbenv
   # install_pyenv
@@ -40,15 +40,15 @@ configure_git() {
 install_apt_packages() {
   sudo apt-get update
   # sudo bash -c 'DEBIAN_FRONTEND=noninteractive exec apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade'
-  sudo apt-get -y install \
-    jq \
-    alpine \
-    bc \
-    openjdk-8-jdk \
-    nfs-common \
-    unzip \
-    mysql-client \
-    pv
+  # sudo apt-get -y install \
+  #   jq \
+  #   alpine \
+  #   bc \
+  #   openjdk-8-jdk \
+  #   nfs-common \
+  #   unzip \
+  #   mysql-client \
+  #   pv
 }
 
 clean_apt() {
