@@ -3,6 +3,8 @@ set -e
 set -x
 
 main() {
+  echo "$a"
+  exit
   install_virtualbox
   install_vmware_vdiskmanager
   install_vagrant
