@@ -1,9 +1,9 @@
 Vagrant.configure("2") do |config|
   config.vm.define "source", autostart: false do |source|
     source.vm.box = "{{.SourceBox}}"
+    source.vm.disk :disk, size: '100GB', primary: true
     config.ssh.insert_key = {{.InsertKey}}
   end
-  config.vm.disk :disk, size: '100GB', primary: true
   config.vm.define "output" do |output|
     output.vm.box = "{{.BoxName}}"
     output.vm.box_url = "file://package.box"
