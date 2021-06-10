@@ -30,7 +30,11 @@ install_vmware_vdiskmanager() {
   sudo mv -v "$file_name" /usr/bin/vmware-vdiskmanager
   popd
   rm -vRf "$archive_file_path" "$archive_path"
-  sudo apt-get -y install zlib1g:i386 libc6-i386 libssl0.9.8:i386
+  sudo apt-get -y install zlib1g:i386 libc6-i386
+  curl -L "-o$archive_file_path" http://archive.ubuntu.com/ubuntu/pool/universe/o/openssl098/libssl0.9.8_0.9.8o-7ubuntu3.1_i386.deb
+  sudo dpkg -i "$archive_file_path"
+  rm -vRf "$archive_file_path"
+  sudo apt-get -y -f install
 }
 
 install_vagrant() {
