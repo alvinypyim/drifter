@@ -3,7 +3,7 @@ set -e
 set -x
 
 main() {
-  exit
+  exec df -h /
   mark_version
   configure_git
   install_apt_packages
