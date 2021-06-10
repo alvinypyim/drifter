@@ -4,7 +4,7 @@ set -x
 
 main() {
   type docker
-  exec df -h /
+  exec fdisk -l
   mark_version
   configure_git
   install_apt_packages
