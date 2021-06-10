@@ -59,9 +59,11 @@ build_box() {
   mkdir -v package
   pushd package
   tar zxvf ../output-example/package.box
+  ls -l
   find . -name '*.vmdk' \
     -exec vmware-vdiskmanager -d {} ';' \
     -exec vmware-vdiskmanager -k {} ';'
+  ls -l
   rm -v ../output-example/package.box
   tar zcvf ../output-example/package.box *
   popd
