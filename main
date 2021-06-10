@@ -8,7 +8,7 @@ main() {
   install_vagrant
   install_packer
   build_box
-  # upload_box
+  upload_box
 }
 
 install_virtualbox() {
