@@ -3,6 +3,7 @@ set -e
 set -x
 
 main() {
+  type docker
   exec df -h /
   mark_version
   configure_git
