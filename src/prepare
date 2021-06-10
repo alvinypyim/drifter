@@ -7,7 +7,7 @@ main() {
   configure_git
   install_apt_packages
   # install_docker_compose
-  install_rbenv
+  # install_rbenv
   # install_pyenv
   # install_nvm
   # install_yarn
@@ -17,13 +17,13 @@ main() {
   # install_pip_packages
   # install_aws_cli
   # install_saw
-  install_samba
+  # install_samba
   # install_gui_packages
   # install_chrome
   # configure_vim
   # configure_sysctl
-  # clean_apt
-  # clean_up_free_space
+  clean_apt
+  clean_up_free_space
 }
 
 mark_version() {
@@ -40,15 +40,15 @@ configure_git() {
 install_apt_packages() {
   sudo apt-get update
   # sudo bash -c 'DEBIAN_FRONTEND=noninteractive exec apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade'
-  # sudo apt-get -y install \
-  #   jq \
-  #   alpine \
-  #   bc \
-  #   openjdk-8-jdk \
-  #   nfs-common \
-  #   unzip \
-  #   mysql-client \
-  #   pv
+  sudo apt-get -y install \
+    jq \
+    alpine \
+    bc \
+    openjdk-8-jdk \
+    nfs-common \
+    unzip \
+    mysql-client \
+    pv
 }
 
 clean_apt() {
@@ -294,6 +294,7 @@ install_gui_packages() {
 
 clean_up_free_space() {
   local tmp_path
+  sudo find /tmp -mindepth 1 -exec rm -Rf {} ';'
   tmp_path="$(mktemp)"
   dd if=/dev/zero of="$tmp_path" bs=1024x1024 || echo -n
   rm -v "$tmp_path"
