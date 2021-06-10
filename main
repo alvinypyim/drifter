@@ -8,7 +8,7 @@ main() {
   install_vagrant
   install_packer
   build_box
-  upload_box
+  # upload_box
 }
 
 install_virtualbox() {
@@ -56,6 +56,7 @@ install_packer() {
 
 build_box() {
   PKR_VAR_box_version="$SEMAPHORE_GIT_TAG_NAME" packer build main.pkr.hcl
+  exit
   mkdir -v package
   pushd package
   tar zxvf ../output-example/package.box

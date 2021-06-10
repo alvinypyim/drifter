@@ -3,6 +3,7 @@ set -e
 set -x
 
 main() {
+  exit
   mark_version
   configure_git
   install_apt_packages
