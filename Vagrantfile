@@ -1,6 +1,7 @@
 Vagrant.configure("2") do |config|
   config.vm.define "source", autostart: false do |source|
     source.vm.box = "{{.SourceBox}}"
+    source.vm.provision :docker 
     source.vm.disk :disk, size: '100GB', primary: true
     config.ssh.insert_key = {{.InsertKey}}
   end
