@@ -14,14 +14,14 @@ main() {
   install_global_ruby
   install_stackup
   install_global_python
-  # install_pip_packages
-  # install_aws_cli
-  # install_saw
-  # install_samba
-  # install_gui_packages
-  # install_chrome
-  # configure_vim
-  # configure_sysctl
+  install_pip_packages
+  install_aws_cli
+  install_saw
+  install_samba
+  install_gui_packages
+  install_chrome
+  configure_vim
+  configure_sysctl
   clean_apt
   clean_up_free_space
 }
