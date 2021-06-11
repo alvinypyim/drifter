@@ -75,11 +75,11 @@ install_rbenv() {
     libgdbm5 \
     libgdbm-dev
   pushd ~
-  git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+  git clone --depth 1 https://github.com/rbenv/rbenv.git ~/.rbenv
   echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
   echo 'eval "$(rbenv init -)"' >> ~/.profile
   mkdir -vp ~/.rbenv/plugins
-  git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+  git clone -bv20210526 --depth 1 https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
   popd
   source_profile
 }
@@ -99,10 +99,11 @@ install_global_ruby() {
 }
 
 install_pyenv() {
-  git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+  git clone -bv2.0.1 --depth 1 https://github.com/pyenv/pyenv.git ~/.pyenv
   echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
   echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
-  echo '! command -v pyenv &> /dev/null || eval "$(pyenv init -)"' >> ~/.profile
+  echo 'eval "$(pyenv init --path)"' >> ~/.profile
+  echo 'eval "$(pyenv init -)"' >> ~/.profile
   source_profile
 }
 
