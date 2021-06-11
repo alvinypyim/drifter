@@ -3,18 +3,17 @@ set -e
 set -x
 
 main() {
-  exec sudo fdisk -l
   mark_version
   configure_git
   install_apt_packages
-  # install_docker_compose
-  # install_rbenv
-  # install_pyenv
-  # install_nvm
-  # install_yarn
-  # install_global_ruby
-  # install_stackup
-  # install_global_python
+  install_docker_compose
+  install_rbenv
+  install_pyenv
+  install_nvm
+  install_yarn
+  install_global_ruby
+  install_stackup
+  install_global_python
   # install_pip_packages
   # install_aws_cli
   # install_saw
@@ -40,7 +39,7 @@ configure_git() {
 
 install_apt_packages() {
   sudo apt-get update
-  # sudo bash -c 'DEBIAN_FRONTEND=noninteractive exec apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade'
+  sudo bash -c 'DEBIAN_FRONTEND=noninteractive exec apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade'
   sudo apt-get -y install \
     jq \
     alpine \
@@ -120,8 +119,8 @@ install_yarn() {
 
 install_global_python() {
   sudo apt-get -y install libsqlite3-dev
-  pyenv install 3.9.0
-  pyenv global 3.9.0
+  pyenv install 3.9.5
+  pyenv global 3.9.5
 }
 
 install_pip_packages() {
