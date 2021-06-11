@@ -300,9 +300,6 @@ clean_up_free_space() {
   dd if=/dev/zero of="$tmp_path" bs=1024x1024 || echo -n
   rm -v "$tmp_path"
   sync
-  sudo parted /dev/sda ---pretend-input-tty resizepart 1 Yes '100%'
-  sudo pvresize /dev/sda1
-  sudo lvresize -rl +100%FREE /dev/mapper/vagrant--vg-root
 }
 
 main
