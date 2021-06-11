@@ -3,6 +3,9 @@ Vagrant.configure("2") do |config|
     source.vm.box = "{{.SourceBox}}"
     source.vm.provision :docker 
     source.vm.disk :disk, size: '100GB', primary: true
+    source.vm.provider "virtualbox" do |vb|
+      vb.customize [ "modifyvm", :id, "--uart1", "off" ]
+    end
     config.ssh.insert_key = {{.InsertKey}}
   end
   config.vm.define "output" do |output|
