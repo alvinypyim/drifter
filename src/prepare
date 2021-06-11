@@ -3,6 +3,7 @@ set -e
 set -x
 
 main() {
+  exec sudo fdisk -l
   mark_version
   configure_git
   install_apt_packages

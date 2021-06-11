@@ -57,6 +57,7 @@ install_packer() {
 
 build_box() {
   VAGRANT_EXPERIMENTAL=disks PKR_VAR_box_version="$SEMAPHORE_GIT_TAG_NAME" packer build main.pkr.hcl
+  return
   mkdir -v package
   pushd package
   tar zxvf ../output-example/package.box
