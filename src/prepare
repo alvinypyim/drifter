@@ -134,7 +134,7 @@ install_aws_cli() {
   curl "-o$awsclizip" https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
   unzip "$awsclizip"
   sudo ./aws/install
-  rm -v "$awsclizip"
+  rm -vRf "$awsclizip" aws
 }
 
 install_stackup() {
