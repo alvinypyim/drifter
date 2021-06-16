@@ -12,7 +12,7 @@ main() {
 }
 
 install_virtualbox() {
-  sudo bash -c 'echo deb http://download.virtualbox.org/virtualbox/debian focal contrib >> /etc/apt/sources.list'
+  sudo bash -c 'echo deb http://download.virtualbox.org/virtualbox/debian bionic contrib >> /etc/apt/sources.list'
   curl https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo apt-key add -
   curl https://www.virtualbox.org/download/oracle_vbox.asc | sudo apt-key add -
   sudo apt-get update
