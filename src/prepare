@@ -109,7 +109,7 @@ install_pyenv() {
 }
 
 install_nvm() {
-  curl https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+  curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 }
 
 install_yarn() {
