@@ -77,6 +77,9 @@ build_box() {
 
 upload_box() {
   tar tf output-example/package.box
+  sha1sum < output-example/package.box | tee "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
+  aws s3 cp "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum" \
+    "s3://s3-archive-bucket-12lood0bp4x5v/package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
   aws s3 cp output-example/package.box \
     "s3://s3-archive-bucket-12lood0bp4x5v/package-$SEMAPHORE_GIT_TAG_NAME.box"
 }
