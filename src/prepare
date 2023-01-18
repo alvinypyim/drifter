@@ -16,6 +16,7 @@ main() {
   install_global_python
   install_pip_packages
   install_aws_cli
+  install_pwsh
   install_saw
   install_samba
   install_gui_packages
@@ -136,6 +137,20 @@ install_aws_cli() {
   unzip "$awsclizip"
   sudo ./aws/install
   rm -vRf "$awsclizip" aws
+}
+
+install_pwsh() {
+  curl -L -opackages-microsoft-prod.deb "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
+  sudo apt-get update
+  sudo apt-get -y install -y powershell
+}
+
+install_stackup() {
+  # Register the Microsoft repository GPG keys
+  sudo dpkg -i packages-microsoft-prod.deb
+  # Update the list of packages after we added packages.microsoft.com
+  sudo apt-get update
+  sudo apt-get -y install -y powershell
 }
 
 install_stackup() {
