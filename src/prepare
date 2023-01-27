@@ -187,11 +187,13 @@ configure_vim() {
   pushd ~/.vim/syntax
   curl -LO https://raw.githubusercontent.com/kchmck/vim-coffee-script/9e3b4de2a476caeb6ff21b5da20966d7c67a98bb/syntax/coffee.vim
   curl -LO https://raw.githubusercontent.com/leafgarland/typescript-vim/5a319ea5504e18215d155576c78d1b7fb8e22c8f/syntax/typescript.vim
+  curl -LO https://raw.githubusercontent.com/PProvost/vim-ps1/502590f90a21f0de2b7664d6d0dcc90e5bb28a9c/syntax/ps1.vim
   popd
   mkdir -vp ~/.vim/ftdetect
   pushd ~/.vim/ftdetect
   curl -LO https://raw.githubusercontent.com/kchmck/vim-coffee-script/9e3b4de2a476caeb6ff21b5da20966d7c67a98bb/ftdetect/coffee.vim
   curl -LO https://raw.githubusercontent.com/leafgarland/typescript-vim/5a319ea5504e18215d155576c78d1b7fb8e22c8f/ftdetect/typescript.vim
+  curl -LO https://raw.githubusercontent.com/PProvost/vim-ps1/502590f90a21f0de2b7664d6d0dcc90e5bb28a9c/ftdetect/ps1.vim
   popd
 }
 
