@@ -142,6 +142,7 @@ install_aws_cli() {
 install_pwsh() {
   curl -L -opackages-microsoft-prod.deb "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
   sudo dpkg -i packages-microsoft-prod.deb
+  rm -v packages-microsoft-prod.deb
   sudo apt-get update
   sudo apt-get -y install -y powershell
 }
