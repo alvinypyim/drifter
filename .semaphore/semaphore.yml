@@ -5,13 +5,13 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: Main
-    task:
-      secrets:
-        - name: Main
-      jobs:
-        - name: Main
-          commands:
-            - sem-version c 8
-            - checkout
-            - ./main
+- name: Main
+  task:
+    secrets:
+    - name: Main
+    jobs:
+    - name: Main
+      commands:
+      - sem-version c 8
+      - checkout
+      - ./main
