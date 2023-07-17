@@ -84,4 +84,5 @@ upload_box() {
     "s3://s3-archive-bucket-12lood0bp4x5v/package-$SEMAPHORE_GIT_TAG_NAME.box"
 }
 
-[ -z "$SEMAPHORE_GIT_TAG_NAME" ] || main
+# [ -z "$SEMAPHORE_GIT_TAG_NAME" ] || main
+[ -z "$SEMAPHORE_GIT_TAG_NAME" ] || date
