@@ -3,7 +3,7 @@ set -e
 set -x
 
 main() {
-  # install_virtualbox
+  install_virtualbox
   install_vmware_vdiskmanager
   # install_vagrant
   # install_packer
@@ -13,13 +13,13 @@ main() {
 
 install_virtualbox() {
   export DEBIAN_FRONTEND=noninteractive
-  sudo bash -c \
-    'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian focal contrib" >> /etc/apt/sources.list'
-  curl -L https://www.virtualbox.org/download/oracle_vbox_2016.asc |
-    sudo gpg --dearmor --yes --output \
-    /usr/share/keyrings/oracle-virtualbox-2016.gpg
-  sudo apt-get update
-  sudo apt-get -y install virtualbox-7.0
+  # sudo bash -c \
+  #   'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian focal contrib" >> /etc/apt/sources.list'
+  # curl -L https://www.virtualbox.org/download/oracle_vbox_2016.asc |
+  #   sudo gpg --dearmor --yes --output \
+  #   /usr/share/keyrings/oracle-virtualbox-2016.gpg
+  # sudo apt-get update
+  # sudo apt-get -y install virtualbox-7.0
 }
 
 install_vmware_vdiskmanager() {
@@ -37,6 +37,7 @@ install_vmware_vdiskmanager() {
   sudo mv -v "$file_name" /usr/bin/vmware-vdiskmanager
   popd
   rm -vRf "$archive_file_path" "$archive_path"
+  sudo apt-get -y install zlib1g:i386
   vmware-vdiskmanager -h
   # sudo apt-get -y install zlib1g:i386 libc6-i386
   # curl -L "-o$archive_file_path" http://archive.ubuntu.com/ubuntu/pool/universe/o/openssl098/libssl0.9.8_0.9.8o-7ubuntu3.1_i386.deb
