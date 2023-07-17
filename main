@@ -9,6 +9,7 @@ main() {
   install_vagrant
   install_packer
   build_box
+  minimise_box
   # upload_box
 }
 
@@ -28,26 +29,36 @@ install_virtualbox() {
 }
 
 install_vmware_vdiskmanager() {
-  local archive_path archive_file_path file_name=1023856-vmware-vdiskmanager-linux.7.0.1
-  archive_file_path="$(mktemp)"
-  curl \
-    -L \
-    "-o$archive_file_path" \
-    -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36' \
-    https://kb.vmware.com/sfc/servlet.shepherd/version/download/068f4000009EgK0AAK
-  archive_path="$(mktemp -d)"
-  pushd "$archive_path"
-  unzip "$archive_file_path"
-  chmod -v 775 "$file_name"
-  sudo mv -v "$file_name" /usr/bin/vmware-vdiskmanager
-  popd
-  rm -vRf "$archive_file_path" "$archive_path"
-  sudo apt-get -y install zlib1g:i386
-  # sudo apt-get -y install libc6-i386
+  # local archive_path archive_file_path file_name=1023856-vmware-vdiskmanager-linux.7.0.1
+  # archive_file_path="$(mktemp)"
+  # curl \
+  #   -L \
+  #   "-o$archive_file_path" \
+  #   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36' \
+  #   https://kb.vmware.com/sfc/servlet.shepherd/version/download/068f4000009EgK0AAK
+  # archive_path="$(mktemp -d)"
+  # pushd "$archive_path"
+  # unzip "$archive_file_path"
+  # chmod -v 775 "$file_name"
+  # sudo mv -v "$file_name" /usr/bin/vmware-vdiskmanager
+  # popd
+  # rm -vRf "$archive_file_path" "$archive_path"
+  # sudo apt-get -y install zlib1g:i386
+  # # sudo apt-get -y install libc6-i386
   # curl -L "-o$archive_file_path" http://archive.ubuntu.com/ubuntu/pool/universe/o/openssl098/libssl0.9.8_0.9.8o-7ubuntu3.1_i386.deb
-  # sudo dpkg -i "$archive_file_path"
-  # rm -vRf "$archive_file_path"
-  # sudo apt-get -y -f install
+  # mv -v "$archive_file_path" libssl0.9.8_0.9.8o-7ubuntu3.1_i386.deb
+  # sudo apt install ./libssl0.9.8_0.9.8o-7ubuntu3.1_i386.deb
+  # vmware-vdiskmanager -d box-disk001.vmdk
+  # # sudo dpkg -i "$archive_file_path"
+  # # rm -vRf "$archive_file_path"
+  # # sudo apt-get -y -f install
+
+  aws s3 cp \
+    s3://s3-archive-bucket-12lood0bp4x5v/VMware-vix-disklib-8.0.1-21562716.x86_64.tar.gz \
+    - | tar zxvf -
+  # LD_LIBRARY_PATH=vmware-vix-disklib-distrib/lib64 \
+  #   find . -name '*.vmdk' \
+  #   -exec vmware-vix-disklib-distrib/bin64/vmware-vdiskmanager -d {} ';'
 }
 
 install_vagrant() {
@@ -75,16 +86,23 @@ build_box() {
   VAGRANT_EXPERIMENTAL=disks \
     PKR_VAR_box_version="$SEMAPHORE_GIT_TAG_NAME" \
     packer build main.pkr.hcl
+}
+
+minimise_box() {
+  local package=package
+
   ls -lh output-example
-  # return
-  mkdir -v package
-  pushd package
+  mkdir -v "$package"
+  pushd "$package"
   tar zxvf ../output-example/package.box
   ls -lh
-  aws s3 cp box-disk001.vmdk s3://s3-archive-bucket-12lood0bp4x5v/
-  find . -name '*.vmdk' \
-    -exec vmware-vdiskmanager -d {} ';' \
-    -exec vmware-vdiskmanager -k {} ';'
+  # aws s3 cp box-disk001.vmdk s3://s3-archive-bucket-12lood0bp4x5v/
+  # aws s3 cp s3://s3-archive-bucket-12lood0bp4x5v/VMware-vix-disklib-8.0.1-21562716.x86_64.tar.gz .
+  # LD_LIBRARY_PATH=vmware-vix-disklib-distrib/lib64 vmware-vix-disklib-distrib/bin64/vmware-vdiskmanager -d box-disk001.vmdk
+  LD_LIBRARY_PATH=../vmware-vix-disklib-distrib/lib64 \
+    find . -name '*.vmdk' \
+    -exec ../vmware-vix-disklib-distrib/bin64/vmware-vdiskmanager -d {} ';' \
+    -exec ../vmware-vix-disklib-distrib/bin64/vmware-vdiskmanager -k {} ';'
   ls -lh
   exit
   rm -v ../output-example/package.box
