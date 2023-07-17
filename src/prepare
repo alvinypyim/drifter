@@ -6,23 +6,23 @@ main() {
   mark_version
   configure_git
   install_apt_packages
-  install_docker_compose
-  install_rbenv
-  install_pyenv
-  install_nvm
-  install_yarn
-  install_global_ruby
-  install_stackup
-  install_global_python
-  install_pip_packages
-  install_aws_cli
-  install_pwsh
-  install_saw
-  install_samba
-  install_gui_packages
-  install_chrome
-  configure_vim
-  configure_sysctl
+  # install_docker_compose
+  # install_rbenv
+  # install_pyenv
+  # install_nvm
+  # install_yarn
+  # install_global_ruby
+  # install_stackup
+  # install_global_python
+  # install_pip_packages
+  # install_aws_cli
+  # install_pwsh
+  # install_saw
+  # install_samba
+  # install_gui_packages
+  # install_chrome
+  # configure_vim
+  # configure_sysctl
   clean_apt
   clean_up_free_space
 }
@@ -39,8 +39,8 @@ configure_git() {
 }
 
 install_apt_packages() {
+  export DEBIAN_FRONTEND=noninteractive
   sudo apt-get update
-  # sudo bash -c 'DEBIAN_FRONTEND=noninteractive exec apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade'
   sudo apt-get -y install \
     jq \
     alpine \
@@ -322,5 +322,4 @@ clean_up_free_space() {
   sync
 }
 
-# main
-date
+main
