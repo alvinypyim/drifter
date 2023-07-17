@@ -3,23 +3,28 @@ set -e
 set -x
 
 main() {
+  initialise_apt
   install_virtualbox
-  # install_vmware_vdiskmanager
-  # install_vagrant
+  install_vmware_vdiskmanager
+  install_vagrant
   install_packer
   # build_box
   # upload_box
 }
 
-install_virtualbox() {
+initialise_apt() {
   export DEBIAN_FRONTEND=noninteractive
-  # sudo bash -c \
-  #   'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" >> /etc/apt/sources.list'
-  # curl -L https://www.virtualbox.org/download/oracle_vbox_2016.asc |
-  #   sudo gpg --dearmor --yes --output \
-  #   /usr/share/keyrings/oracle-virtualbox-2016.gpg
   sudo apt-get update
-  # sudo apt-get -y install virtualbox-7.0
+}
+
+install_virtualbox() {
+  sudo bash -c \
+    'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" >> /etc/apt/sources.list'
+  curl -L https://www.virtualbox.org/download/oracle_vbox_2016.asc |
+    sudo gpg --dearmor --yes --output \
+    /usr/share/keyrings/oracle-virtualbox-2016.gpg
+  sudo apt-get update
+  sudo apt-get -y install virtualbox-7.0
 }
 
 install_vmware_vdiskmanager() {
