@@ -4,8 +4,8 @@ set -x
 
 main() {
   install_virtualbox
-  install_vmware_vdiskmanager
-  # install_vagrant
+  # install_vmware_vdiskmanager
+  install_vagrant
   # install_packer
   # build_box
   # upload_box
@@ -18,7 +18,7 @@ install_virtualbox() {
   # curl -L https://www.virtualbox.org/download/oracle_vbox_2016.asc |
   #   sudo gpg --dearmor --yes --output \
   #   /usr/share/keyrings/oracle-virtualbox-2016.gpg
-  # sudo apt-get update
+  sudo apt-get update
   # sudo apt-get -y install virtualbox-7.0
 }
 
@@ -38,7 +38,6 @@ install_vmware_vdiskmanager() {
   popd
   rm -vRf "$archive_file_path" "$archive_path"
   sudo apt-get -y install zlib1g:i386
-  vmware-vdiskmanager -h
   # sudo apt-get -y install zlib1g:i386 libc6-i386
   # curl -L "-o$archive_file_path" http://archive.ubuntu.com/ubuntu/pool/universe/o/openssl098/libssl0.9.8_0.9.8o-7ubuntu3.1_i386.deb
   # sudo dpkg -i "$archive_file_path"
@@ -50,11 +49,13 @@ install_vagrant() {
   local vagrant_deb
 
   vagrant_deb="$(mktemp)"
-  curl -L "-o$vagrant_deb" https://releases.hashicorp.com/vagrant/2.2.16/vagrant_2.2.16_x86_64.deb
+  curl -L "-o$vagrant_deb" \
+    https://releases.hashicorp.com/vagrant/2.3.7/vagrant_2.3.7-1_amd64.deb
   sudo dpkg -i "$vagrant_deb"
   rm -v "$vagrant_deb"
   sudo apt-get -y -f install
   vagrant plugin install vagrant-disksize
+  vagrant -h
 }
 
 install_packer() {
