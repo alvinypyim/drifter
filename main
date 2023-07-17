@@ -4,11 +4,11 @@ set -x
 
 main() {
   initialise_apt
-  install_virtualbox
+  # install_virtualbox
   install_vmware_vdiskmanager
-  install_vagrant
-  install_packer
-  build_box
+  # install_vagrant
+  # install_packer
+  # build_box
   # upload_box
 }
 
@@ -44,7 +44,10 @@ install_vmware_vdiskmanager() {
   rm -vRf "$archive_file_path" "$archive_path"
   sudo apt-get -y install zlib1g:i386
   # sudo apt-get -y install libc6-i386
-  # curl -L "-o$archive_file_path" http://archive.ubuntu.com/ubuntu/pool/universe/o/openssl098/libssl0.9.8_0.9.8o-7ubuntu3.1_i386.deb
+  curl -L "-o$archive_file_path" http://archive.ubuntu.com/ubuntu/pool/universe/o/openssl098/libssl0.9.8_0.9.8o-7ubuntu3.1_i386.deb
+  mv -v "$archive_file_path" libssl0.9.8_0.9.8o-7ubuntu3.1_i386.deb
+  sudo apt install ./libssl0.9.8_0.9.8o-7ubuntu3.1_i386.deb
+  vmware-vdiskmanager -d box-disk001.vmdk
   # sudo dpkg -i "$archive_file_path"
   # rm -vRf "$archive_file_path"
   # sudo apt-get -y -f install
@@ -81,7 +84,7 @@ build_box() {
   pushd package
   tar zxvf ../output-example/package.box
   ls -lh
-  aws s3 cp box-disk001.vmdk s3://s3-archive-bucket-12lood0bp4x5v/
+  # aws s3 cp box-disk001.vmdk s3://s3-archive-bucket-12lood0bp4x5v/
   find . -name '*.vmdk' \
     -exec vmware-vdiskmanager -d {} ';' \
     -exec vmware-vdiskmanager -k {} ';'
