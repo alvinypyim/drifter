@@ -8,7 +8,7 @@ main() {
   install_vmware_vdiskmanager
   install_vagrant
   install_packer
-  # build_box
+  build_box
   # upload_box
 }
 
