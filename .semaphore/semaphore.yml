@@ -10,6 +10,6 @@ blocks:
     jobs:
     - name: Main
       commands:
-      - sem-version c 8
+      # - sem-version c 8
       - checkout
       - ./main
