@@ -62,29 +62,32 @@ build_box() {
 }
 
 minimise_box() {
-  local package=package
+  local package=package output=output-main
 
-  ls -lh output-example
+  ls -lh "$output"
   mkdir -v "$package"
   pushd "$package"
-  tar zxvf ../output-example/package.box
+  tar zxvf ../"$output"/package.box
   ls -lh
   LD_LIBRARY_PATH=../vmware-vix-disklib-distrib/lib64 \
     find . -name '*.vmdk' \
     -exec ../vmware-vix-disklib-distrib/bin64/vmware-vdiskmanager -d {} ';' \
     -exec ../vmware-vix-disklib-distrib/bin64/vmware-vdiskmanager -k {} ';'
   ls -lh
-  rm -v ../output-example/package.box
-  tar zcvf ../output-example/package.box *
+  rm -v ../"$output"/package.box
+  tar zcvf ../"$output"/package.box *
+  ls -lh ../"$output"
   popd
 }
 
 upload_box() {
-  tar tf output-example/package.box
-  sha1sum < output-example/package.box | tee "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
+  local output=output-main
+
+  tar tf "$output"/package.box
+  sha1sum < "$output"/package.box | tee "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
   aws s3 cp "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum" \
     "s3://s3-archive-bucket-12lood0bp4x5v/package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
-  aws s3 cp output-example/package.box \
+  aws s3 cp "$output"/package.box \
     "s3://s3-archive-bucket-12lood0bp4x5v/package-$SEMAPHORE_GIT_TAG_NAME.box"
 }
 

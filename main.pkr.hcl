@@ -2,7 +2,7 @@ variable "box_version" {
   type = string
 }
 
-source "vagrant" "example" {
+source "vagrant" "main" {
   communicator = "ssh"
   source_path = "ubuntu/jammy64"
   box_version = "v20230712.0.0"
@@ -12,7 +12,7 @@ source "vagrant" "example" {
 }
 
 build {
-  sources = ["source.vagrant.example"]
+  sources = ["source.vagrant.main"]
   provisioner "file" {
     destination = "/home/vagrant/.vimrc"
     source = "src/vimrc"
