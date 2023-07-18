@@ -13,8 +13,8 @@ main() {
   # install_yarn
   # install_global_ruby
   # install_stackup
-  # install_global_python
-  # install_pip_packages
+  install_global_python
+  install_pip_packages
   # install_aws_cli
   # install_pwsh
   # install_saw
@@ -124,8 +124,8 @@ install_yarn() {
 
 install_global_python() {
   sudo apt-get -y install libsqlite3-dev
-  pyenv install 3.9.5
-  pyenv global 3.9.5
+  pyenv install 3.11.4
+  pyenv global 3.11.4
 }
 
 install_pip_packages() {
