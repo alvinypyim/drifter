@@ -2,6 +2,9 @@
 set -e
 set -x
 
+VAGRANT_PROVIDER=virtualbox
+VAGRANT_NAME=drifter
+
 main() {
   initialise_apt
   install_virtualbox
@@ -81,14 +84,74 @@ minimise_box() {
 }
 
 upload_box() {
+  # local output=output-main
+
+  # tar tf "$output"/package.box
+  # sha1sum < "$output"/package.box | tee "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
+  # aws s3 cp "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum" \
+  #   "s3://s3-archive-bucket-12lood0bp4x5v/package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
+  # aws s3 cp "$output"/package.box \
+  #   "s3://s3-archive-bucket-12lood0bp4x5v/package-$SEMAPHORE_GIT_TAG_NAME.box"
+  push_box
+}
+
+push_box() {
+  vagrant_create_version
+  vagrant_create_provider
+  vagrant_upload_box
+  vagrant_release_version
+}
+
+vagrant_upload_box() {
   local output=output-main
 
-  tar tf "$output"/package.box
-  sha1sum < "$output"/package.box | tee "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
-  aws s3 cp "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum" \
-    "s3://s3-archive-bucket-12lood0bp4x5v/package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
-  aws s3 cp "$output"/package.box \
-    "s3://s3-archive-bucket-12lood0bp4x5v/package-$SEMAPHORE_GIT_TAG_NAME.box"
+  curl -vs -XPUT --upload-file "$output"/package.box "$(vagrant_upload_url)" || echo Exit code: "$?"
+}
+
+vagrant_upload_url() {
+  vagrant_upload_info | jq -r '.upload_path'
+}
+
+vagrant_upload_info() {
+  vagrant_curl "$(vagrant_api_endpoint)/version/$SEMAPHORE_GIT_TAG_NAME/provider/$VAGRANT_PROVIDER/upload"
+}
+
+vagrant_has_version() {
+  [ -n "$(vagrant_versions | jq --arg tag "$SEMAPHORE_GIT_TAG_NAME" '.versions[] | select(.version == $tag)')" ]
+}
+
+vagrant_versions() {
+  vagrant_curl "$(vagrant_api_endpoint)"
+}
+
+vagrant_create_version() {
+  vagrant_curl \
+    '-HContent-Type: application/json' \
+    "-d$(vagrant_version)" \
+    "$(vagrant_api_endpoint)/versions"
+}
+
+vagrant_release_version() {
+  vagrant_curl -XPUT "$(vagrant_api_endpoint)/version/$SEMAPHORE_GIT_TAG_NAME/release"
+}
+
+vagrant_create_provider() {
+  vagrant_curl \
+    '-HContent-Type: application/json' \
+    '-d{"provider":{"name":"virtualbox"}}' \
+    "$(vagrant_api_endpoint)/version/$SEMAPHORE_GIT_TAG_NAME/providers"
+}
+
+vagrant_version() {
+  echo 1 | jq --arg tag "$SEMAPHORE_GIT_TAG_NAME" '{"version":{"version":$tag}}'
+}
+
+vagrant_api_endpoint() {
+  echo "https://app.vagrantup.com/api/v1/box/$VAGRANT_USERNAME/$VAGRANT_NAME"
+}
+
+vagrant_curl() {
+  curl "-HAuthorization: Bearer $VAGRANT_CLOUD_TOKEN" "$@"
 }
 
 [ -z "$SEMAPHORE_GIT_TAG_NAME" ] || main
