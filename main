@@ -32,9 +32,9 @@ install_virtualbox() {
 }
 
 install_vmware_vdiskmanager() {
-  aws s3 cp \
-    s3://s3-archive-bucket-12lood0bp4x5v/VMware-vix-disklib-8.0.1-21562716.x86_64.tar.gz \
-    - | tar zxvf -
+  curl -L \
+    https://s3-archive-bucket-12lood0bp4x5v.s3.ap-southeast-2.amazonaws.com/VMware-vix-disklib-8.0.1-21562716.x86_64.tar.gz |
+    tar zxvf -
 }
 
 install_vagrant() {
@@ -65,17 +65,21 @@ build_box() {
 }
 
 minimise_box() {
-  local package=package output=output-main
+  local \
+    package=package \
+    output=output-main \
+    vdiskmanager_base=vmware-vix-disklib-distrib \
+    vdiskmanager=bin64/vmware-vdiskmanager
 
   ls -lh "$output"
   mkdir -v "$package"
   pushd "$package"
   tar zxvf ../"$output"/package.box
   ls -lh
-  LD_LIBRARY_PATH=../vmware-vix-disklib-distrib/lib64 \
+  LD_LIBRARY_PATH="../$vdiskmanager_base/lib64" \
     find . -name '*.vmdk' \
-    -exec ../vmware-vix-disklib-distrib/bin64/vmware-vdiskmanager -d {} ';' \
-    -exec ../vmware-vix-disklib-distrib/bin64/vmware-vdiskmanager -k {} ';'
+    -exec "../$vdiskmanager_base/$vdiskmanager" -d {} ';' \
+    -exec "../$vdiskmanager_base/$vdiskmanager" -k {} ';'
   ls -lh
   rm -v ../"$output"/package.box
   tar zcvf ../"$output"/package.box *
@@ -84,18 +88,24 @@ minimise_box() {
 }
 
 upload_box() {
-  local output=output-main
-
-  tar tf "$output"/package.box
-  sha1sum < "$output"/package.box | tee "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
-  aws s3 cp "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum" \
-    "s3://s3-archive-bucket-12lood0bp4x5v/package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
-  aws s3 cp "$output"/package.box \
-    "s3://s3-archive-bucket-12lood0bp4x5v/package-$SEMAPHORE_GIT_TAG_NAME.box"
-  push_box
+  # upload_aws
+  upload_vagrant
 }
 
-push_box() {
+upload_aws() {
+  local \
+    output=output-main \
+    bucket=s3-archive-bucket-12lood0bp4x5v
+
+  tar tf "$output"/package.box
+  sha1sum < "$output/package.box" | tee "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
+  aws s3 cp "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum" \
+    "s3://$bucket/package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
+  aws s3 cp "$output/package.box" \
+    "s3://$bucket/package-$SEMAPHORE_GIT_TAG_NAME.box"
+}
+
+upload_vagrant() {
   vagrant_create_version
   vagrant_create_provider
   vagrant_upload_box
@@ -114,14 +124,6 @@ vagrant_upload_url() {
 
 vagrant_upload_info() {
   vagrant_curl "$(vagrant_api_endpoint)/version/$SEMAPHORE_GIT_TAG_NAME/provider/$VAGRANT_PROVIDER/upload"
-}
-
-vagrant_has_version() {
-  [ -n "$(vagrant_versions | jq --arg tag "$SEMAPHORE_GIT_TAG_NAME" '.versions[] | select(.version == $tag)')" ]
-}
-
-vagrant_versions() {
-  vagrant_curl "$(vagrant_api_endpoint)"
 }
 
 vagrant_create_version() {
