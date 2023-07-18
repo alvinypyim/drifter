@@ -15,7 +15,7 @@ main() {
   # install_stackup
   install_global_python
   install_pip_packages
-  # install_aws_cli
+  install_aws_cli
   # install_pwsh
   # install_saw
   # install_samba
@@ -104,6 +104,22 @@ install_global_ruby() {
 }
 
 install_pyenv() {
+  sudo apt-get -y install \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    curl \
+    libncursesw5-dev \
+    xz-utils \
+    tk-dev \
+    libxml2-dev \
+    libxmlsec1-dev \
+    libffi-dev \
+    liblzma-dev
+
   git clone -bv2.3.22 --depth 1 https://github.com/pyenv/pyenv.git ~/.pyenv
   echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
   echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
@@ -123,7 +139,6 @@ install_yarn() {
 }
 
 install_global_python() {
-  sudo apt-get -y install libsqlite3-dev
   pyenv install 3.11.4
   pyenv global 3.11.4
 }
@@ -133,8 +148,7 @@ install_pip_packages() {
 }
 
 install_aws_cli() {
-  local awsclizip
-  awsclizip=awscliv2.zip
+  local awsclizip=awscliv2.zip
   curl "-o$awsclizip" https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
   unzip "$awsclizip"
   sudo ./aws/install
