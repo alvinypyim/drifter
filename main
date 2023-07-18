@@ -4,6 +4,7 @@ set -x
 
 VAGRANT_PROVIDER=virtualbox
 VAGRANT_NAME=drifter
+PACKER_OUTPUT=output-main
 
 main() {
   initialise_apt
@@ -67,23 +68,22 @@ build_box() {
 minimise_box() {
   local \
     package=package \
-    output=output-main \
     vdiskmanager_base=vmware-vix-disklib-distrib \
     vdiskmanager=bin64/vmware-vdiskmanager
 
-  ls -lh "$output"
+  ls -lh "$PACKER_OUTPUT"
   mkdir -v "$package"
   pushd "$package"
-  tar zxvf ../"$output"/package.box
+  tar zxvf "../$PACKER_OUTPUT/package.box"
   ls -lh
   LD_LIBRARY_PATH="../$vdiskmanager_base/lib64" \
     find . -name '*.vmdk' \
     -exec "../$vdiskmanager_base/$vdiskmanager" -d {} ';' \
     -exec "../$vdiskmanager_base/$vdiskmanager" -k {} ';'
   ls -lh
-  rm -v ../"$output"/package.box
-  tar zcvf ../"$output"/package.box *
-  ls -lh ../"$output"
+  rm -v "../$PACKER_OUTPUT/package.box"
+  tar zcvf "../$PACKER_OUTPUT/package.box" *
+  ls -lh "../$PACKER_OUTPUT"
   popd
 }
 
@@ -93,15 +93,13 @@ upload_box() {
 }
 
 upload_aws() {
-  local \
-    output=output-main \
-    bucket=s3-archive-bucket-12lood0bp4x5v
+  local bucket=s3-archive-bucket-12lood0bp4x5v
 
-  tar tf "$output"/package.box
-  sha1sum < "$output/package.box" | tee "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
+  tar tf "$PACKER_OUTPUT/package.box"
+  sha1sum < "$PACKER_OUTPUT/package.box" | tee "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
   aws s3 cp "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum" \
     "s3://$bucket/package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
-  aws s3 cp "$output/package.box" \
+  aws s3 cp "$PACKER_OUTPUT/package.box" \
     "s3://$bucket/package-$SEMAPHORE_GIT_TAG_NAME.box"
 }
 
@@ -113,9 +111,11 @@ upload_vagrant() {
 }
 
 vagrant_upload_box() {
-  local output=output-main
-
-  curl -vs -XPUT --upload-file "$output"/package.box "$(vagrant_upload_url)" || echo Exit code: "$?"
+  curl \
+    -vs \
+    -XPUT \
+    --upload-file "$PACKER_OUTPUT/package.box" \
+    "$(vagrant_upload_url)" || echo Exit code: "$?"
 }
 
 vagrant_upload_url() {
