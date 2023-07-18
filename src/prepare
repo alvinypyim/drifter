@@ -6,23 +6,23 @@ main() {
   mark_version
   configure_git
   install_apt_packages
-  # install_docker_compose
-  # install_rbenv
+  install_docker_compose
+  install_rbenv
   # install_pyenv
   # install_nvm
   # install_yarn
-  # install_global_ruby
-  # install_stackup
+  install_global_ruby
+  install_stackup
   # install_global_python
   # install_pip_packages
   # install_aws_cli
   # install_pwsh
   # install_saw
-  # install_samba
+  install_samba
   # install_gui_packages
   # install_chrome
-  # configure_vim
-  # configure_sysctl
+  configure_vim
+  configure_sysctl
   clean_apt
   clean_up_free_space
 }
@@ -65,23 +65,26 @@ install_docker_compose() {
 install_rbenv() {
   sudo apt-get -y install \
     autoconf \
-    bison \
+    patch \
     build-essential \
+    rustc \
     libssl-dev \
     libyaml-dev \
     libreadline6-dev \
     zlib1g-dev \
+    libgmp-dev \
     libncurses5-dev \
     libffi-dev \
     libgdbm6 \
     libgdbm-dev \
-    libdb-dev
+    libdb-dev \
+    uuid-dev
+
   pushd ~
   git clone --depth 1 https://github.com/rbenv/rbenv.git ~/.rbenv
-  echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
-  echo 'eval "$(rbenv init -)"' >> ~/.profile
+  echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.profile
   mkdir -vp ~/.rbenv/plugins
-  git clone -bv20210526 --depth 1 https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+  git clone -bv20230717 --depth 1 https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
   popd
   source_profile
 }
@@ -95,9 +98,9 @@ source_profile() {
 }
 
 install_global_ruby() {
-  rbenv install 2.7.3
+  rbenv install 3.2.2
   rbenv rehash
-  rbenv global 2.7.3
+  rbenv global 3.2.2
 }
 
 install_pyenv() {
@@ -148,14 +151,6 @@ install_pwsh() {
 }
 
 install_stackup() {
-  # Register the Microsoft repository GPG keys
-  sudo dpkg -i packages-microsoft-prod.deb
-  # Update the list of packages after we added packages.microsoft.com
-  sudo apt-get update
-  sudo apt-get -y install -y powershell
-}
-
-install_stackup() {
   gem install stackup -N
 }
 
@@ -178,9 +173,8 @@ install_chrome() {
   local chrome
   chrome="$(mktemp)"
   curl -L "-o$chrome" https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  sudo dpkg -i "$chrome" || echo -n
+  sudo dpkg -i "$chrome"
   rm -v "$chrome"
-  sudo apt-get -y -f install
 }
 
 configure_vim() {
