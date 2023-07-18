@@ -6,19 +6,19 @@ main() {
   mark_version
   configure_git
   install_apt_packages
-  install_docker_compose
-  install_rbenv
-  # install_pyenv
+  # install_docker_compose
+  # install_rbenv
+  install_pyenv
   # install_nvm
   # install_yarn
-  install_global_ruby
-  install_stackup
+  # install_global_ruby
+  # install_stackup
   # install_global_python
   # install_pip_packages
   # install_aws_cli
   # install_pwsh
   # install_saw
-  install_samba
+  # install_samba
   # install_gui_packages
   # install_chrome
   configure_vim
@@ -104,10 +104,9 @@ install_global_ruby() {
 }
 
 install_pyenv() {
-  git clone -bv2.0.1 --depth 1 https://github.com/pyenv/pyenv.git ~/.pyenv
+  git clone -bv2.3.22 --depth 1 https://github.com/pyenv/pyenv.git ~/.pyenv
   echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
-  echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
-  echo 'eval "$(pyenv init --path)"' >> ~/.profile
+  echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
   echo 'eval "$(pyenv init -)"' >> ~/.profile
   source_profile
 }
