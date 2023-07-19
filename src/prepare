@@ -178,8 +178,9 @@ install_chrome() {
   local chrome
   chrome="$(mktemp)"
   curl -L "-o$chrome" https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  sudo dpkg -i "$chrome"
+  sudo dpkg -i "$chrome" || echo -n
   rm -v "$chrome"
+  sudo -E apt-get -y -f install
 }
 
 configure_vim() {
