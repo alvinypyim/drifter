@@ -9,12 +9,12 @@ PACKER_OUTPUT=output-main
 main() {
   initialise_apt
   install_virtualbox
-  # install_vmware_vdiskmanager
+  install_vmware_vdiskmanager
   install_vagrant
   install_packer
   build_box
-  # minimise_box
-  upload_box
+  minimise_box
+  # upload_box
 }
 
 initialise_apt() {
