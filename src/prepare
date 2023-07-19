@@ -6,24 +6,24 @@ main() {
   mark_version
   configure_git
   install_apt_packages
-  install_docker_compose
-  install_rbenv
-  install_pyenv
-  install_nvm
-  install_global_ruby
-  install_stackup
-  install_global_python
-  install_pip_packages
-  install_aws_cli
-  install_pwsh
-  install_saw
-  install_samba
-  install_gui_packages
-  install_chrome
+  # install_docker_compose
+  # install_rbenv
+  # install_pyenv
+  # install_nvm
+  # install_global_ruby
+  # install_stackup
+  # install_global_python
+  # install_pip_packages
+  # install_aws_cli
+  # install_pwsh
+  # install_saw
+  # install_samba
+  # install_gui_packages
+  # install_chrome
   configure_vim
   configure_sysctl
   clean_apt
-  clean_up_free_space
+  # clean_up_free_space
 }
 
 mark_version() {
@@ -142,9 +142,9 @@ install_pip_packages() {
 install_aws_cli() {
   local awsclizip=awscliv2.zip
   curl "-o$awsclizip" https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
-  unzip "$awsclizip"
+  unzip -q "$awsclizip"
   sudo ./aws/install
-  rm -vRf "$awsclizip" aws
+  rm -Rf "$awsclizip" aws
 }
 
 install_pwsh() {
