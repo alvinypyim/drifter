@@ -43,7 +43,7 @@ install_vagrant() {
 
   vagrant_deb="$(mktemp)"
   curl -L "-o$vagrant_deb" \
-    https://releases.hashicorp.com/vagrant/2.3.7/vagrant_2.3.7-1_amd64.deb
+    https://releases.hashicorp.com/vagrant/2.2.16/vagrant_2.2.16_x86_64.deb
   sudo dpkg -i "$vagrant_deb"
   rm -v "$vagrant_deb"
   vagrant plugin install vagrant-disksize
