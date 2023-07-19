@@ -29,7 +29,7 @@ install_virtualbox() {
     sudo gpg --dearmor --yes --output \
     /usr/share/keyrings/oracle-virtualbox-2016.gpg
   sudo apt-get update
-  sudo -E apt-get -y install virtualbox-7.0
+  sudo -E apt-get -y install virtualbox-6.1
 }
 
 install_vmware_vdiskmanager() {
@@ -43,7 +43,7 @@ install_vagrant() {
 
   vagrant_deb="$(mktemp)"
   curl -L "-o$vagrant_deb" \
-    https://releases.hashicorp.com/vagrant/2.3.7/vagrant_2.3.7-1_amd64.deb
+    https://releases.hashicorp.com/vagrant/2.2.16/vagrant_2.2.16_x86_64.deb
   sudo dpkg -i "$vagrant_deb"
   rm -v "$vagrant_deb"
   vagrant plugin install vagrant-disksize
