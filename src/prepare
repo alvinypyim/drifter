@@ -8,15 +8,15 @@ main() {
   install_apt_packages
   # install_docker_compose
   # install_rbenv
-  install_pyenv
+  # install_pyenv
   # install_nvm
   # install_yarn
   # install_global_ruby
   # install_stackup
-  install_global_python
-  install_pip_packages
+  # install_global_python
+  # install_pip_packages
   install_aws_cli
-  # install_pwsh
+  install_pwsh
   # install_saw
   # install_samba
   # install_gui_packages
@@ -41,7 +41,7 @@ configure_git() {
 install_apt_packages() {
   export DEBIAN_FRONTEND=noninteractive
   sudo apt-get update
-  sudo apt-get -y install \
+  sudo -E apt-get -y install \
     jq \
     alpine \
     bc \
@@ -63,7 +63,7 @@ install_docker_compose() {
 }
 
 install_rbenv() {
-  sudo apt-get -y install \
+  sudo -E apt-get -y install \
     autoconf \
     patch \
     build-essential \
@@ -104,7 +104,7 @@ install_global_ruby() {
 }
 
 install_pyenv() {
-  sudo apt-get -y install \
+  sudo -E apt-get -y install \
     build-essential \
     libssl-dev \
     zlib1g-dev \
@@ -135,7 +135,7 @@ install_yarn() {
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
   echo deb https://dl.yarnpkg.com/debian/ stable main | sudo tee /etc/apt/sources.list.d/yarn.list
   sudo apt-get update
-  sudo apt-get -y install yarn
+  sudo -E apt-get -y install yarn
 }
 
 install_global_python() {
@@ -160,7 +160,7 @@ install_pwsh() {
   sudo dpkg -i packages-microsoft-prod.deb
   rm -v packages-microsoft-prod.deb
   sudo apt-get update
-  sudo apt-get -y install -y powershell
+  sudo -E apt-get -y install -y powershell
 }
 
 install_stackup() {
@@ -176,7 +176,7 @@ install_saw() {
 }
 
 install_samba() {
-  sudo apt-get -y install samba
+  sudo -E apt-get -y install samba
   sudo bash -c 'cat /tmp/smb-section.conf >> /etc/samba/smb.conf'
   rm -v /tmp/smb-section.conf
   { echo vagrant && echo vagrant; } | sudo smbpasswd -a -s vagrant
@@ -212,7 +212,7 @@ configure_sysctl() {
 install_gui_packages() {
   echo 'export GDK_DPI_SCALE=1.25' >> ~/.profile
   echo 'export QT_FONT_DPI=120' >> ~/.profile
-  sudo apt-get -y install \
+  sudo -E apt-get -y install \
     xvfb \
     x11vnc \
     fluxbox \

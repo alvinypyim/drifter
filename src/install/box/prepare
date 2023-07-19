@@ -5,5 +5,5 @@ cd "$(dirname "$0")"
 [ ! -e ~/.ssh/id_dsa ] || chmod -v 600 ~/.ssh/id_dsa
 [ -z "$GIT_USER_EMAIL" ] ||git config --global user.email "$GIT_USER_EMAIL"
 [ -z "$GIT_USER_NAME" ] || git config --global user.name "$GIT_USER_NAME"
-[ -z "$UBUNTU_APT_MIRROR" ] || sudo -E bash -c 'cp -v /etc/apt/sources.list{,.backup} && envsubst < sources.list.template > /etc/apt/sources.list'
+[ -z "$UBUNTU_APT_MIRROR" ] || RELEASE="$(lsb_release -rs)" sudo -E bash -c 'cp -v /etc/apt/sources.list{,.backup} && envsubst < sources.list.template > /etc/apt/sources.list'
 [ -z "$DESIRED_TIMEZONE" ] || echo "export TZ='""$DESIRED_TIMEZONE""'" >> ~/.profile

@@ -1,10 +1,10 @@
-deb $UBUNTU_APT_MIRROR focal main restricted
-deb $UBUNTU_APT_MIRROR focal-updates main restricted
-deb $UBUNTU_APT_MIRROR focal universe
-deb $UBUNTU_APT_MIRROR focal-updates universe
-deb $UBUNTU_APT_MIRROR focal multiverse
-deb $UBUNTU_APT_MIRROR focal-updates multiverse
-deb $UBUNTU_APT_MIRROR focal-backports main restricted universe multiverse
-deb http://security.ubuntu.com/ubuntu focal-security main restricted
-deb http://security.ubuntu.com/ubuntu focal-security universe
-deb http://security.ubuntu.com/ubuntu focal-security multiverse
+deb $UBUNTU_APT_MIRROR $RELEASE main restricted
+deb $UBUNTU_APT_MIRROR $RELEASE-updates main restricted
+deb $UBUNTU_APT_MIRROR $RELEASE universe
+deb $UBUNTU_APT_MIRROR $RELEASE-updates universe
+deb $UBUNTU_APT_MIRROR $RELEASE multiverse
+deb $UBUNTU_APT_MIRROR $RELEASE-updates multiverse
+deb $UBUNTU_APT_MIRROR $RELEASE-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu $RELEASE-security main restricted
+deb http://security.ubuntu.com/ubuntu $RELEASE-security universe
+deb http://security.ubuntu.com/ubuntu $RELEASE-security multiverse
