@@ -10,17 +10,16 @@ main() {
   # install_rbenv
   # install_pyenv
   # install_nvm
-  # install_yarn
   # install_global_ruby
   # install_stackup
   # install_global_python
   # install_pip_packages
-  install_aws_cli
-  install_pwsh
+  # install_aws_cli
+  # install_pwsh
   # install_saw
   # install_samba
-  # install_gui_packages
-  # install_chrome
+  install_gui_packages
+  install_chrome
   configure_vim
   configure_sysctl
   clean_apt
@@ -128,14 +127,7 @@ install_pyenv() {
 }
 
 install_nvm() {
-  curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-}
-
-install_yarn() {
-  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-  echo deb https://dl.yarnpkg.com/debian/ stable main | sudo tee /etc/apt/sources.list.d/yarn.list
-  sudo apt-get update
-  sudo -E apt-get -y install yarn
+  curl -L https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 }
 
 install_global_python() {
@@ -278,6 +270,7 @@ install_gui_packages() {
     fonts-smc-anjalioldlipi \
     fonts-smc-chilanka \
     fonts-smc-dyuthi \
+    fonts-smc-gayathri \
     fonts-smc-karumbi \
     fonts-smc-keraleeyam \
     fonts-smc-manjari \
@@ -289,6 +282,7 @@ install_gui_packages() {
     fonts-taml \
     fonts-telu \
     fonts-telu-extra \
+    fonts-teluguvijayam \
     fonts-thai-tlwg \
     fonts-tibetan-machine \
     fonts-tlwg-garuda \
@@ -317,7 +311,9 @@ install_gui_packages() {
     fonts-tlwg-umpush-ttf \
     fonts-tlwg-waree \
     fonts-tlwg-waree-ttf \
-    fonts-ubuntu
+    fonts-ubuntu \
+    fonts-urw-base35 \
+    fonts-yrsa-rasa
 }
 
 clean_up_free_space() {
