@@ -63,25 +63,28 @@ install_docker_compose() {
 }
 
 install_rbenv() {
-  sudo apt-get -y install \
+  sudo -E apt-get -y install \
     autoconf \
-    bison \
+    patch \
     build-essential \
+    rustc \
     libssl-dev \
     libyaml-dev \
     libreadline6-dev \
     zlib1g-dev \
+    libgmp-dev \
     libncurses5-dev \
     libffi-dev \
     libgdbm6 \
     libgdbm-dev \
-    libdb-dev
+    libdb-dev \
+    uuid-dev
+
   pushd ~
   git clone --depth 1 https://github.com/rbenv/rbenv.git ~/.rbenv
-  echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
-  echo 'eval "$(rbenv init -)"' >> ~/.profile
+  echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.profile
   mkdir -vp ~/.rbenv/plugins
-  git clone -bv20210526 --depth 1 https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+  git clone -bv20230717 --depth 1 https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
   popd
   source_profile
 }
