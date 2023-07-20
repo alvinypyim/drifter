@@ -7,7 +7,6 @@ source "vagrant" "main" {
   source_path = "ubuntu/focal64"
   box_version = "v20230111.0.0"
   provider = "virtualbox"
-#   add_force = true
   template = "Vagrantfile"
 }
 

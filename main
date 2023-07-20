@@ -13,8 +13,8 @@ main() {
   install_vagrant
   install_packer
   build_box
-  minimise_box
-  # upload_box
+  # minimise_box
+  upload_box
 }
 
 initialise_apt() {
