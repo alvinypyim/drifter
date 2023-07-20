@@ -4,8 +4,8 @@ variable "box_version" {
 
 source "vagrant" "example" {
   communicator = "ssh"
-  source_path = "ubuntu/focal64"
-  box_version = "v20230111.0.0"
+  source_path = "ubuntu/jammy64"
+  box_version = "v20230712.0.0"
   provider = "virtualbox"
   add_force = true
   template = "Vagrantfile"
