@@ -271,7 +271,6 @@ install_gui_packages() {
     fonts-smc-anjalioldlipi \
     fonts-smc-chilanka \
     fonts-smc-dyuthi \
-    fonts-smc-gayathri \
     fonts-smc-karumbi \
     fonts-smc-keraleeyam \
     fonts-smc-manjari \
@@ -283,7 +282,6 @@ install_gui_packages() {
     fonts-taml \
     fonts-telu \
     fonts-telu-extra \
-    fonts-teluguvijayam \
     fonts-thai-tlwg \
     fonts-tibetan-machine \
     fonts-tlwg-garuda \
@@ -312,9 +310,7 @@ install_gui_packages() {
     fonts-tlwg-umpush-ttf \
     fonts-tlwg-waree \
     fonts-tlwg-waree-ttf \
-    fonts-ubuntu \
-    fonts-urw-base35 \
-    fonts-yrsa-rasa
+    fonts-ubuntu
 }
 
 clean_up_free_space() {
