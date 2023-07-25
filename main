@@ -1,0 +1,159 @@
+#!/usr/bin/env bash
+set -e
+set -x
+
+VAGRANT_PROVIDER=virtualbox
+VAGRANT_NAME=drifter
+PACKER_OUTPUT=output-main
+
+main() {
+  initialise_apt
+  install_virtualbox
+  install_vmware_vdiskmanager
+  install_vagrant
+  install_packer
+  build_box
+  # minimise_box
+  upload_box
+}
+
+initialise_apt() {
+  export DEBIAN_FRONTEND=noninteractive
+  sudo apt-get update
+}
+
+install_virtualbox() {
+  sudo bash -c \
+    'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" >> /etc/apt/sources.list'
+  curl -L https://www.virtualbox.org/download/oracle_vbox_2016.asc |
+    sudo gpg --dearmor --yes --output \
+    /usr/share/keyrings/oracle-virtualbox-2016.gpg
+  sudo apt-get update
+  sudo -E apt-get -y install virtualbox-7.0
+}
+
+install_vmware_vdiskmanager() {
+  curl -L \
+    https://s3-archive-bucket-12lood0bp4x5v.s3.ap-southeast-2.amazonaws.com/VMware-vix-disklib-8.0.1-21562716.x86_64.tar.gz |
+    tar zxvf -
+}
+
+install_vagrant() {
+  local vagrant_deb
+
+  vagrant_deb="$(mktemp)"
+  curl -L "-o$vagrant_deb" \
+    https://releases.hashicorp.com/vagrant/2.3.7/vagrant_2.3.7-1_amd64.deb
+  sudo dpkg -i "$vagrant_deb"
+  rm -v "$vagrant_deb"
+  vagrant plugin install vagrant-disksize
+}
+
+install_packer() {
+  curl -L https://apt.releases.hashicorp.com/gpg | \
+    sudo gpg --dearmor --yes -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  sudo bash -c \
+    'echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list'
+  sudo apt-get update
+  sudo -E apt-get -y install packer
+}
+
+build_box() {
+  VAGRANT_EXPERIMENTAL=disks \
+    PKR_VAR_box_version="$SEMAPHORE_GIT_TAG_NAME" \
+    packer build main.pkr.hcl
+  tar tf "$PACKER_OUTPUT/package.box"
+}
+
+minimise_box() {
+  local \
+    package=package \
+    vdiskmanager_base=vmware-vix-disklib-distrib \
+    vdiskmanager=bin64/vmware-vdiskmanager
+
+  ls -lh "$PACKER_OUTPUT"
+  mkdir -v "$package"
+  pushd "$package"
+  tar zxvf "../$PACKER_OUTPUT/package.box"
+  ls -lh
+  LD_LIBRARY_PATH="../$vdiskmanager_base/lib64" \
+    find . -name '*.vmdk' \
+    -exec "../$vdiskmanager_base/$vdiskmanager" -d {} ';' \
+    -exec "../$vdiskmanager_base/$vdiskmanager" -k {} ';'
+  ls -lh
+  rm -v "../$PACKER_OUTPUT/package.box"
+  tar zcvf "../$PACKER_OUTPUT/package.box" *
+  ls -lh "../$PACKER_OUTPUT"
+  popd
+}
+
+upload_box() {
+  # upload_aws
+  upload_vagrant
+}
+
+upload_aws() {
+  local bucket=s3-archive-bucket-12lood0bp4x5v
+
+  tar tf "$PACKER_OUTPUT/package.box"
+  sha1sum < "$PACKER_OUTPUT/package.box" | tee "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
+  aws s3 cp "package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum" \
+    "s3://$bucket/package-$SEMAPHORE_GIT_TAG_NAME.box.sha1sum"
+  aws s3 cp "$PACKER_OUTPUT/package.box" \
+    "s3://$bucket/package-$SEMAPHORE_GIT_TAG_NAME.box"
+}
+
+upload_vagrant() {
+  vagrant_create_version
+  vagrant_create_provider
+  vagrant_upload_box
+  vagrant_release_version
+}
+
+vagrant_upload_box() {
+  curl \
+    -vs \
+    -XPUT \
+    --upload-file "$PACKER_OUTPUT/package.box" \
+    "$(vagrant_upload_url)" || echo Exit code: "$?"
+}
+
+vagrant_upload_url() {
+  vagrant_upload_info | jq -r '.upload_path'
+}
+
+vagrant_upload_info() {
+  vagrant_curl "$(vagrant_api_endpoint)/version/$SEMAPHORE_GIT_TAG_NAME/provider/$VAGRANT_PROVIDER/upload"
+}
+
+vagrant_create_version() {
+  vagrant_curl \
+    '-HContent-Type: application/json' \
+    "-d$(vagrant_version)" \
+    "$(vagrant_api_endpoint)/versions"
+}
+
+vagrant_release_version() {
+  vagrant_curl -XPUT "$(vagrant_api_endpoint)/version/$SEMAPHORE_GIT_TAG_NAME/release"
+}
+
+vagrant_create_provider() {
+  vagrant_curl \
+    '-HContent-Type: application/json' \
+    '-d{"provider":{"name":"virtualbox"}}' \
+    "$(vagrant_api_endpoint)/version/$SEMAPHORE_GIT_TAG_NAME/providers"
+}
+
+vagrant_version() {
+  echo 1 | jq --arg tag "$SEMAPHORE_GIT_TAG_NAME" '{"version":{"version":$tag}}'
+}
+
+vagrant_api_endpoint() {
+  echo "https://app.vagrantup.com/api/v1/box/$VAGRANT_USERNAME/$VAGRANT_NAME"
+}
+
+vagrant_curl() {
+  curl "-HAuthorization: Bearer $VAGRANT_CLOUD_TOKEN" "$@"
+}
+
+[ -z "$SEMAPHORE_GIT_TAG_NAME" ] || main

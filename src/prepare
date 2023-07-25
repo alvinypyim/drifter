@@ -1,0 +1,325 @@
+#!/usr/bin/env bash
+set -e
+set -x
+
+main() {
+  mark_version
+  configure_git
+  install_apt_packages
+  install_docker_compose
+  install_rbenv
+  install_pyenv
+  install_nvm
+  install_global_ruby
+  install_stackup
+  install_global_python
+  install_pip_packages
+  install_aws_cli
+  install_pwsh
+  install_saw
+  install_samba
+  install_gui_packages
+  install_chrome
+  configure_vim
+  configure_sysctl
+  clean_apt
+  clean_up_free_space
+}
+
+mark_version() {
+  [ -z "$BOX_VERSION" ] || echo "$BOX_VERSION" > ~/box-version
+}
+
+configure_git() {
+  git config --global core.editor "$(which vim)"
+  git config --global merge.conflictstyle diff3
+  git config --global core.excludesfile ~/.gitignore
+  git config --global core.pager 'less -S'
+}
+
+install_apt_packages() {
+  export DEBIAN_FRONTEND=noninteractive
+  sudo apt-get update
+  sudo -E apt-get -y install \
+    jq \
+    alpine \
+    bc \
+    openjdk-8-jdk \
+    nfs-common \
+    unzip \
+    mysql-client \
+    pv
+}
+
+clean_apt() {
+  sudo apt-get clean
+  sudo rm -Rf /var/lib/apt/lists/*
+}
+
+install_docker_compose() {
+  sudo curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+  sudo chmod +x /usr/local/bin/docker-compose
+}
+
+install_rbenv() {
+  sudo -E apt-get -y install \
+    autoconf \
+    patch \
+    build-essential \
+    rustc \
+    libssl-dev \
+    libyaml-dev \
+    libreadline6-dev \
+    zlib1g-dev \
+    libgmp-dev \
+    libncurses5-dev \
+    libffi-dev \
+    libgdbm6 \
+    libgdbm-dev \
+    libdb-dev \
+    uuid-dev
+
+  pushd ~
+  git clone --depth 1 https://github.com/rbenv/rbenv.git ~/.rbenv
+  echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.profile
+  mkdir -vp ~/.rbenv/plugins
+  git clone -bv20230717 --depth 1 https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+  popd
+  source_profile
+}
+
+source_profile() {
+  set +e
+  set +x
+  . ~/.profile
+  set -x
+  set -e
+}
+
+install_global_ruby() {
+  rbenv install 3.2.2
+  rbenv rehash
+  rbenv global 3.2.2
+}
+
+install_pyenv() {
+  sudo -E apt-get -y install \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    curl \
+    libncursesw5-dev \
+    xz-utils \
+    tk-dev \
+    libxml2-dev \
+    libxmlsec1-dev \
+    libffi-dev \
+    liblzma-dev
+
+  git clone -bv2.3.22 --depth 1 https://github.com/pyenv/pyenv.git ~/.pyenv
+  echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
+  echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
+  echo 'eval "$(pyenv init -)"' >> ~/.profile
+  source_profile
+}
+
+install_nvm() {
+  curl -L https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+}
+
+install_global_python() {
+  pyenv install 3.11.4
+  pyenv global 3.11.4
+}
+
+install_pip_packages() {
+  pip install pipenv
+}
+
+install_aws_cli() {
+  local awsclizip=awscliv2.zip
+  curl "-o$awsclizip" https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+  unzip -q "$awsclizip"
+  sudo ./aws/install
+  rm -Rf "$awsclizip" aws
+}
+
+install_pwsh() {
+  curl -L -opackages-microsoft-prod.deb "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
+  sudo dpkg -i packages-microsoft-prod.deb
+  rm -v packages-microsoft-prod.deb
+  sudo apt-get update
+  sudo -E apt-get -y install -y powershell
+}
+
+install_stackup() {
+  gem install stackup -N
+}
+
+install_saw() {
+  local temp_file
+  temp_file="$(mktemp)"
+  curl -L "-o$temp_file" https://github.com/TylerBrock/saw/releases/download/v0.2.2/saw_0.2.2_linux_amd64.deb
+  sudo dpkg -i "$temp_file"
+  rm -v "$temp_file"
+}
+
+install_samba() {
+  sudo -E apt-get -y install samba
+  sudo bash -c 'cat /tmp/smb-section.conf >> /etc/samba/smb.conf'
+  rm -v /tmp/smb-section.conf
+  { echo vagrant && echo vagrant; } | sudo smbpasswd -a -s vagrant
+}
+
+install_chrome() {
+  local chrome
+  chrome="$(mktemp)"
+  curl -L "-o$chrome" https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  sudo dpkg -i "$chrome" || echo -n
+  rm -v "$chrome"
+  sudo -E apt-get -y -f install
+}
+
+configure_vim() {
+  mkdir -vp ~/.vim/syntax
+  pushd ~/.vim/syntax
+  curl -LO https://raw.githubusercontent.com/kchmck/vim-coffee-script/9e3b4de2a476caeb6ff21b5da20966d7c67a98bb/syntax/coffee.vim
+  curl -LO https://raw.githubusercontent.com/leafgarland/typescript-vim/5a319ea5504e18215d155576c78d1b7fb8e22c8f/syntax/typescript.vim
+  curl -LO https://raw.githubusercontent.com/PProvost/vim-ps1/502590f90a21f0de2b7664d6d0dcc90e5bb28a9c/syntax/ps1.vim
+  popd
+  mkdir -vp ~/.vim/ftdetect
+  pushd ~/.vim/ftdetect
+  curl -LO https://raw.githubusercontent.com/kchmck/vim-coffee-script/9e3b4de2a476caeb6ff21b5da20966d7c67a98bb/ftdetect/coffee.vim
+  curl -LO https://raw.githubusercontent.com/leafgarland/typescript-vim/5a319ea5504e18215d155576c78d1b7fb8e22c8f/ftdetect/typescript.vim
+  curl -LO https://raw.githubusercontent.com/PProvost/vim-ps1/502590f90a21f0de2b7664d6d0dcc90e5bb28a9c/ftdetect/ps1.vim
+  popd
+}
+
+configure_sysctl() {
+  sudo bash -c 'echo fs.inotify.max_user_watches=524288 >> /etc/sysctl.conf'
+}
+
+install_gui_packages() {
+  echo 'export GDK_DPI_SCALE=1.25' >> ~/.profile
+  echo 'export QT_FONT_DPI=120' >> ~/.profile
+  sudo -E apt-get -y install \
+    xvfb \
+    x11vnc \
+    fluxbox \
+    firefox \
+    konsole \
+    dbus-x11 \
+    gitk \
+    fonts-arphic-ukai \
+    fonts-arphic-uming \
+    fonts-beng \
+    fonts-beng-extra \
+    fonts-dejavu-core \
+    fonts-deva \
+    fonts-deva-extra \
+    fonts-droid-fallback \
+    fonts-freefont-ttf \
+    fonts-gargi \
+    fonts-gubbi \
+    fonts-gujr \
+    fonts-gujr-extra \
+    fonts-guru \
+    fonts-guru-extra \
+    fonts-indic \
+    fonts-kacst \
+    fonts-kacst-one \
+    fonts-kalapi \
+    fonts-khmeros-core \
+    fonts-knda \
+    fonts-lao \
+    fonts-liberation \
+    fonts-liberation2 \
+    fonts-lklug-sinhala \
+    fonts-lohit-beng-assamese \
+    fonts-lohit-beng-bengali \
+    fonts-lohit-deva \
+    fonts-lohit-gujr \
+    fonts-lohit-guru \
+    fonts-lohit-knda \
+    fonts-lohit-mlym \
+    fonts-lohit-orya \
+    fonts-lohit-taml \
+    fonts-lohit-taml-classical \
+    fonts-lohit-telu \
+    fonts-mlym \
+    fonts-nakula \
+    fonts-navilu \
+    fonts-noto-cjk \
+    fonts-noto-color-emoji \
+    fonts-noto-mono \
+    fonts-opensymbol \
+    fonts-orya \
+    fonts-orya-extra \
+    fonts-pagul \
+    fonts-sahadeva \
+    fonts-samyak-deva \
+    fonts-samyak-gujr \
+    fonts-samyak-mlym \
+    fonts-samyak-taml \
+    fonts-sarai \
+    fonts-sil-abyssinica \
+    fonts-sil-padauk \
+    fonts-smc \
+    fonts-smc-anjalioldlipi \
+    fonts-smc-chilanka \
+    fonts-smc-dyuthi \
+    fonts-smc-karumbi \
+    fonts-smc-keraleeyam \
+    fonts-smc-manjari \
+    fonts-smc-meera \
+    fonts-smc-rachana \
+    fonts-smc-raghumalayalamsans \
+    fonts-smc-suruma \
+    fonts-smc-uroob \
+    fonts-taml \
+    fonts-telu \
+    fonts-telu-extra \
+    fonts-thai-tlwg \
+    fonts-tibetan-machine \
+    fonts-tlwg-garuda \
+    fonts-tlwg-garuda-ttf \
+    fonts-tlwg-kinnari \
+    fonts-tlwg-kinnari-ttf \
+    fonts-tlwg-laksaman \
+    fonts-tlwg-laksaman-ttf \
+    fonts-tlwg-loma \
+    fonts-tlwg-loma-ttf \
+    fonts-tlwg-mono \
+    fonts-tlwg-mono-ttf \
+    fonts-tlwg-norasi \
+    fonts-tlwg-norasi-ttf \
+    fonts-tlwg-purisa \
+    fonts-tlwg-purisa-ttf \
+    fonts-tlwg-sawasdee \
+    fonts-tlwg-sawasdee-ttf \
+    fonts-tlwg-typewriter \
+    fonts-tlwg-typewriter-ttf \
+    fonts-tlwg-typist \
+    fonts-tlwg-typist-ttf \
+    fonts-tlwg-typo \
+    fonts-tlwg-typo-ttf \
+    fonts-tlwg-umpush \
+    fonts-tlwg-umpush-ttf \
+    fonts-tlwg-waree \
+    fonts-tlwg-waree-ttf \
+    fonts-ubuntu
+}
+
+clean_up_free_space() {
+  local tmp_path
+  sudo find /tmp -mindepth 1 -exec rm -Rf {} ';' || echo -n
+  tmp_path="$(mktemp)"
+  dd if=/dev/zero of="$tmp_path" bs=1024x1024 || echo -n
+  rm -v "$tmp_path"
+  sync
+}
+
+main

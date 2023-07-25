@@ -1,0 +1,16 @@
+version: v1.0
+name: drifter
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+blocks:
+- name: Main
+  task:
+    secrets:
+    - name: Main
+    jobs:
+    - name: Main
+      commands:
+      - checkout
+      - ./main
